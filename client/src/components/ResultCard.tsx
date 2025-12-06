@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Eye, MessageCircle, Heart, ChevronDown, ChevronUp } from 'lucide-react';
+import { Eye, MessageCircle, Heart, ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface ResultCardProps {
@@ -20,75 +20,130 @@ export const ResultCard: React.FC<ResultCardProps> = ({ data }) => {
     if (!data || data.length === 0) return null;
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl mx-auto mt-12">
-            {data.map((item, idx) => {
-                // Normalize field names (Bright Data uses no underscores)
-                const thumbnail = item.cover_image || item.cover_image_url || item.thumbnail_url || item.displayUrl || item.url;
-                const views = item.playcount || item.play_count || item.views || 0;
-                const likes = item.diggcount || item.digg_count || item.likes || 0;
-                const comments = item.commentcount || item.comment_count || item.comments || 0;
-                const caption = item.title || item.desc || item.description || item.text || '';
+        <div className="w-full">
+            {/* Results Header */}
+            <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-semibold text-white">
+                    Results <span className="text-cyan-400">({data.length})</span>
+                </h2>
+            </div>
 
-                return (
-                    <motion.div
-                        key={idx}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: idx * 0.05 }}
-                        className="glass rounded-2xl overflow-hidden group hover:border-cyan-500/30 transition-colors"
-                    >
-                        {/* Image / Thumbnail */}
-                        <div className="aspect-[9/16] relative bg-slate-900">
-                            {thumbnail ? (
-                                <img
-                                    src={thumbnail}
-                                    alt="Content"
-                                    className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
-                                    onError={(e) => {
-                                        e.currentTarget.style.display = 'none';
-                                    }}
-                                />
-                            ) : (
-                                <div className="w-full h-full flex items-center justify-center">
-                                    <span className="text-4xl opacity-20">🎬</span>
+            {/* Table/List Layout - Full Width */}
+            <div className="glass rounded-2xl overflow-hidden">
+                {/* Table Header */}
+                <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-slate-800/50 border-b border-slate-700 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                    <div className="col-span-1">#</div>
+                    <div className="col-span-2">Thumbnail</div>
+                    <div className="col-span-4">Caption</div>
+                    <div className="col-span-1 text-center">Views</div>
+                    <div className="col-span-1 text-center">Likes</div>
+                    <div className="col-span-1 text-center">Comments</div>
+                    <div className="col-span-2 text-center">Actions</div>
+                </div>
+
+                {/* Table Rows */}
+                {data.map((item, idx) => {
+                    // Normalize field names (Bright Data uses no underscores)
+                    const thumbnail = item.cover_image || item.cover_image_url || item.thumbnail_url || item.displayUrl;
+                    const views = item.playcount || item.play_count || item.views || 0;
+                    const likes = item.diggcount || item.digg_count || item.likes || 0;
+                    const comments = item.commentcount || item.comment_count || item.comments || 0;
+                    const caption = item.title || item.desc || item.description || item.text || '';
+                    const videoUrl = item.video_url || item.url || '';
+
+                    return (
+                        <motion.div
+                            key={idx}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: idx * 0.03 }}
+                            className="border-b border-slate-800 last:border-b-0 hover:bg-slate-800/30 transition-colors"
+                        >
+                            {/* Main Row */}
+                            <div className="grid grid-cols-12 gap-4 px-6 py-4 items-center">
+                                {/* Index */}
+                                <div className="col-span-1 text-slate-500 font-mono text-sm">
+                                    {String(idx + 1).padStart(2, '0')}
                                 </div>
-                            )}
-                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-90" />
 
-                            <div className="absolute bottom-0 left-0 right-0 p-4">
-                                {/* Stats */}
-                                <div className="flex items-center justify-between text-xs font-medium text-slate-300 mb-3 bg-slate-950/50 backdrop-blur-sm p-2 rounded-lg border border-white/5">
-                                    <div className="flex items-center gap-1.5" title="Views">
-                                        <Eye className="w-3.5 h-3.5 text-cyan-400" />
-                                        {formatNumber(views)}
-                                    </div>
-                                    <div className="flex items-center gap-1.5" title="Likes">
-                                        <Heart className="w-3.5 h-3.5 text-rose-400" />
-                                        {formatNumber(likes)}
-                                    </div>
-                                    <div className="flex items-center gap-1.5" title="Comments">
-                                        <MessageCircle className="w-3.5 h-3.5 text-amber-400" />
-                                        {formatNumber(comments)}
+                                {/* Thumbnail */}
+                                <div className="col-span-2">
+                                    <div className="w-16 h-24 rounded-lg overflow-hidden bg-slate-900 flex-shrink-0">
+                                        {thumbnail ? (
+                                            <img
+                                                src={thumbnail}
+                                                alt="Thumbnail"
+                                                className="w-full h-full object-cover"
+                                                onError={(e) => {
+                                                    e.currentTarget.style.display = 'none';
+                                                }}
+                                            />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center text-2xl opacity-30">
+                                                🎬
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
 
                                 {/* Caption */}
-                                <p className="text-sm line-clamp-2 text-white/90 font-medium">
-                                    {caption || 'No caption'}
-                                </p>
+                                <div className="col-span-4">
+                                    <p className="text-white font-medium line-clamp-2 text-sm">
+                                        {caption || 'No caption'}
+                                    </p>
+                                    <p className="text-slate-500 text-xs mt-1">
+                                        {item.create_date || item.createTime || ''}
+                                    </p>
+                                </div>
+
+                                {/* Views */}
+                                <div className="col-span-1 text-center">
+                                    <div className="flex items-center justify-center gap-1.5 text-slate-300">
+                                        <Eye className="w-4 h-4 text-cyan-400" />
+                                        <span className="font-semibold">{formatNumber(views)}</span>
+                                    </div>
+                                </div>
+
+                                {/* Likes */}
+                                <div className="col-span-1 text-center">
+                                    <div className="flex items-center justify-center gap-1.5 text-slate-300">
+                                        <Heart className="w-4 h-4 text-rose-400" />
+                                        <span className="font-semibold">{formatNumber(likes)}</span>
+                                    </div>
+                                </div>
+
+                                {/* Comments */}
+                                <div className="col-span-1 text-center">
+                                    <div className="flex items-center justify-center gap-1.5 text-slate-300">
+                                        <MessageCircle className="w-4 h-4 text-amber-400" />
+                                        <span className="font-semibold">{formatNumber(comments)}</span>
+                                    </div>
+                                </div>
+
+                                {/* Actions */}
+                                <div className="col-span-2 flex items-center justify-center gap-2">
+                                    {videoUrl && (
+                                        <a
+                                            href={videoUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="p-2 rounded-lg bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 transition"
+                                            title="Open Video"
+                                        >
+                                            <ExternalLink className="w-4 h-4" />
+                                        </a>
+                                    )}
+                                    <button
+                                        onClick={() => setExpandedId(expandedId === idx.toString() ? null : idx.toString())}
+                                        className="px-3 py-1.5 rounded-lg bg-slate-700/50 text-slate-400 hover:text-white hover:bg-slate-700 text-xs font-medium transition flex items-center gap-1"
+                                    >
+                                        {expandedId === idx.toString() ? 'Hide' : 'Data'}
+                                        {expandedId === idx.toString() ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                                    </button>
+                                </div>
                             </div>
-                        </div>
 
-                        {/* Details (JSON) Toggle */}
-                        <div className="p-3 border-t border-slate-800 bg-slate-950/30">
-                            <button
-                                onClick={() => setExpandedId(expandedId === idx.toString() ? null : idx.toString())}
-                                className="w-full flex items-center justify-center gap-2 text-xs text-slate-500 hover:text-cyan-400 uppercase tracking-wider font-semibold py-1 transition"
-                            >
-                                {expandedId === idx.toString() ? 'Hide Data' : 'View Data'}
-                                {expandedId === idx.toString() ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-                            </button>
-
+                            {/* Expanded JSON Data */}
                             <AnimatePresence>
                                 {expandedId === idx.toString() && (
                                     <motion.div
@@ -97,16 +152,18 @@ export const ResultCard: React.FC<ResultCardProps> = ({ data }) => {
                                         exit={{ height: 0, opacity: 0 }}
                                         className="overflow-hidden"
                                     >
-                                        <pre className="mt-3 p-3 bg-slate-950 rounded-lg text-[10px] text-emerald-400 font-mono overflow-auto max-h-60 border border-slate-800 custom-scrollbar">
-                                            {JSON.stringify(item, null, 2)}
-                                        </pre>
+                                        <div className="px-6 pb-4">
+                                            <pre className="p-4 bg-slate-950 rounded-lg text-xs text-emerald-400 font-mono overflow-auto max-h-80 border border-slate-800 custom-scrollbar">
+                                                {JSON.stringify(item, null, 2)}
+                                            </pre>
+                                        </div>
                                     </motion.div>
                                 )}
                             </AnimatePresence>
-                        </div>
-                    </motion.div>
-                );
-            })}
+                        </motion.div>
+                    );
+                })}
+            </div>
         </div>
     );
 };
