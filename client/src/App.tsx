@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider, useMutation, useQuery } from '@tansta
 import axios from 'axios';
 import { InputBar } from './components/InputBar';
 import { ResultCard } from './components/ResultCard';
-import { AlertCircle, Terminal, Download, History, FileJson, FileSpreadsheet, Trash2, RefreshCw } from 'lucide-react';
+import { AlertCircle, Terminal, History, FileJson, FileSpreadsheet, RefreshCw } from 'lucide-react';
 
 const queryClient = new QueryClient();
 
@@ -89,8 +89,8 @@ function SocialDataStudio() {
           <button
             onClick={() => setShowHistory(!showHistory)}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition ${showHistory
-                ? 'bg-cyan-500 text-white'
-                : 'glass text-slate-300 hover:text-white'
+              ? 'bg-cyan-500 text-white'
+              : 'glass text-slate-300 hover:text-white'
               }`}
           >
             <History className="w-4 h-4" />
@@ -143,8 +143,8 @@ function SocialDataStudio() {
                   >
                     <div className="flex items-center gap-3">
                       <span className={`px-2 py-1 text-xs font-bold rounded uppercase ${record.platform === 'tiktok' ? 'bg-pink-500/20 text-pink-400' :
-                          record.platform === 'youtube' ? 'bg-red-500/20 text-red-400' :
-                            'bg-purple-500/20 text-purple-400'
+                        record.platform === 'youtube' ? 'bg-red-500/20 text-red-400' :
+                          'bg-purple-500/20 text-purple-400'
                         }`}>
                         {record.platform}
                       </span>

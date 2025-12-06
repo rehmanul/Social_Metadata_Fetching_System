@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Eye, MessageCircle, Heart, Share2, ChevronDown, ChevronUp } from 'lucide-react';
+import { Eye, MessageCircle, Heart, ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface ResultCardProps {
