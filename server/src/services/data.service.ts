@@ -116,12 +116,12 @@ export const DataService = {
                     record.platform,
                     record.username,
                     record.scrapedAt,
-                    `"${(item.title || item.desc || item.description || '').replace(/"/g, '""')}"`,
-                    item.play_count || item.views || 0,
-                    item.digg_count || item.likes || 0,
-                    item.comment_count || item.comments || 0,
-                    item.share_count || item.shares || 0,
-                    item.url || item.video_url || ''
+                    `"${(item.title || item.desc || item.description || item.text || '').replace(/"/g, '""')}"`,
+                    item.playcount || item.play_count || item.views || 0,
+                    item.diggcount || item.digg_count || item.likes || 0,
+                    item.commentcount || item.comment_count || item.comments || 0,
+                    item.sharecount || item.share_count || item.shares || 0,
+                    item.video_url || item.url || ''
                 ];
                 rows.push(row.join(','));
             }
