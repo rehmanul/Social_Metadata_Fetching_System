@@ -8,17 +8,13 @@ services:
     rootDir: server
     buildCommand: npm install && npm run build
     startCommand: node dist/index.js
-    disk:
-      name: data-storage
-      mountPath: /var/data
-      sizeGB: 1
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
         value: 4000
       - key: DATA_DIR
-        value: /var/data
+        value: ./data
       - key: BRIGHTDATA_API_KEY
         sync: false
 
@@ -26,7 +22,6 @@ services:
   - type: web
     name: social-data-studio
     runtime: static
-    region: oregon
     plan: free
     rootDir: client
     buildCommand: npm install && npm run build
